@@ -56,7 +56,7 @@ struct Tuning{T} <: AbstractTuning{T}
     B₀ :: Note
 end
 
-C₀(t::AbstractTuning) = t.c₀
+C₀(t::AbstractTuning) = t.C₀
 C♯₀(t::AbstractTuning) = t.C♯₀
 D₀(t::AbstractTuning) = t.D₀
 D♯₀(t::AbstractTuning) = t.D♯₀
