@@ -2,6 +2,24 @@ module Lydia
 
 using Unitful
 
+export 
+    Note, 
+    Tuning
+
+export 
+    C₀,
+    C♯₀,
+    D₀,
+    D♯₀,
+    E₀,
+    F₀,
+    F♯₀,
+    G₀,
+    G♯₀,
+    A₀,
+    A♯₀,
+    B₀
+
 const Ω = 345u"m/s"
 
 λ(f) = Ω / f
@@ -11,32 +29,47 @@ abstract type AbstractNote end
 f(x::AbstractNote) = x.f
 λ(x::AbstractNote) = x.λ
 
-struct Note : AbstractNote
+struct Note <: AbstractNote
     f   # frequency (Hz)
     λ   # wavelength (m)
 end
 
-abstract type AbstractTuning end
+Note(f) = Note(f * 1u"Hz", λ(f))
 
-function C₀(t::AbstractTuning):: AbstractNote
-function C♯₀(t::AbstractTuning):: AbstractNote
+lerp(a::AbstractNote, b::AbstractNote, t) = 
+    (1 - t) * a.f + t * b.f |> Note
 
-function D₀ = Note(18.27)
-function D♯₀ = Note(19.36)
-function E₀ = Note(20.51)
-function F₀ = Note(21.73)
-function F♯₀ = Note(23.02)
-function G₀ = Note(24.39)
-function G♯₀ = Note(25.84)
-function A₀ = Note(27.38)
-function A♯₀ = Note(29.00)
-function B₀ = Note(30.37)
+abstract type AbstractTuning{T} end
 
-lerp(a::Note, b::Note, t) = (1 - t) * a.f + t * b.f |> Note
+struct Tuning{T} <: AbstractTuning{T}
+    C₀ :: Note
+    C♯₀ :: Note
+    D₀ :: Note
+    D♯₀ :: Note
+    E₀ :: Note
+    F₀ :: Note
+    F♯₀ :: Note
+    G₀ :: Note
+    G♯₀ :: Note
+    A₀ :: Note
+    A♯₀ :: Note
+    B₀ :: Note
+end
 
-Note(f) = Note(f, λ(f))
+C₀(t::AbstractTuning) = t.c₀
+C♯₀(t::AbstractTuning) = t.C♯₀
+D₀(t::AbstractTuning) = t.D₀
+D♯₀(t::AbstractTuning) = t.D♯₀
+E₀(t::AbstractTuning) = t.E₀
+F₀(t::AbstractTuning) = t.F₀
+F♯₀(t::AbstractTuning) = t.F♯₀
+G₀(t::AbstractTuning) = t.G₀
+G♯₀(t::AbstractTuning) = t.G♯₀
+A₀(t::AbstractTuning) = t.A₀
+A♯₀(t::AbstractTuning) = t.A♯₀
+B₀(t::AbstractTuning) = t.B₀
 
-# include("./438/tuning.jl")
+include("./438/tuning.jl")
 include("./440/tuning.jl")
 
 end # module
