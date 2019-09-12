@@ -1,0 +1,7 @@
+name = "Lydia"
+uuid = "e1dc6320-d58e-11e9-3554-effd161d2b2f"
+authors = ["Bas Pennings <baspster@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
