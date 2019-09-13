@@ -1,2 +1,2 @@
-# Lydia.jl
+# Tarana
 Composing music with Julia.
