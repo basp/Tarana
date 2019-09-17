@@ -1,46 +1,89 @@
 module Tarana
 
-# http://pages.mtu.edu/~suits/notefreqs.html
-# https://en.wikipedia.org/wiki/Equal_temperament
+include("./pitchclasses.jl")
 
-using Unitful
+export
+    Cff, C♭♭, Cf, C♭, C, Dff, D♭♭, Cs, C♯, Df, D♭, Css, C♯♯, D, Eff, E♭♭, Ds, D♯, 
+    Ef, E♭, Fff, F♭♭, Dss, D♯♯, E, Ff, F♭, Es, E♯, F, Gff, G♭♭, Ess, E♯♯, Fs, F♯, 
+    Gf, G♭, Fss, F♯♯, G, Aff, A♭♭, Gs, G♯, Af, A♭, Gss, G♯♯, A, Bff, B♭♭, As, A♯, 
+    Bf, B♭, Ass, A♯♯, B, Bs, B♯, Bss, B♯♯
 
-import Base: *, /, +, -
+const 
+    Dur = Rational
+    Pitch = Tuple{PitchClass, Int}
 
-export Note
+const
+    concertA = (A, 4)
+    a440 = (A, 4)
 
-export nextnote
+abstract type Music end
+abstract type Primitive <: Music end
+abstract type Control end
 
-c = 345u"m/s"
-λ(f) = uconvert(u"m", c / f)
-
-NOTES = [:A, :As, :B, :C, :Cs, :D, :Ds, :E, :F, :Fs, :G, :Gs]
-
-CENT = 2^(1 // 1200)
-CENT⁻¹ = inv(CENT)
-
-struct Note
-    f::typeof(1.0u"Hz")
-    λ::typeof(1.0u"m")
+struct Note <: Primitive
+    dur::Dur
+    p::Pitch
 end
 
-Note(f) = Note(f, λ(f))
-
-A4_440 = Note(440u"Hz")
-
-*(n::Note, v::Number) = Note(n.f * v)
-*(v::Number, n::Note) = Note(n.f * v)
-
-/(n::Note, v::Number) = Note(n.f / v)
-/(v::Number, n::Note) = Note(v / n.f)
-
-+(n::Note, v::Int) = foldl((s, _) -> s * CENT, 1:v; init=n)
--(n::Note, v::Int) = foldl((s, _) -> s * CENT⁻¹, 1:v; init=n)
-
-function nextnote(n)
-    i = findfirst(isequal(n), NOTES)
-    i = mod1(i + 1, length(NOTES))
-    return NOTES[i]
+struct Rest <: Primitive
+    dur::Dur
 end
+
+Base.show(io::IO, x::Note) = print(io, "Note($(x.dur), $(x.p))")
+Base.show(io::IO, x::Rest) = print(io, "Rest($(x.dur))")
+
+export Note, Rest
+
+struct Sequence <: Music
+    a::Vector{Music}
+end
+
+struct Parallel <: Music
+    a::Vector{Music}
+end
+
+struct Modify <: Music
+    c::Control
+    a::Music
+end
+
+→(a...) = Sequence([a...])
+⇉(a...) = Parallel([a...])
+
+seq(a...) = →(a...)
+
+export Sequence, Parallel, Modify
+export →, ⇉
+
+"""
+    abspitch(p)::Int
+
+Returns an integer absolute pitch value in the range of 0..127.
+"""
+abspitch(p::Pitch) = abspitch(p...)
+abspitch(pc::PitchClass, oct) = 12 * (oct + 1) + Int(pc)
+
+# pitch(0) = (C,-1)
+# pitch(60) = (C, 4)
+# pitch(127) = (G, 9)
+
+"""
+    pitch(ap)::Pitch
+
+Returns a `Pitch` as calculated from an absolute pitch value.
+"""
+pitch(ap) =
+    let (oct, n) = divrem(ap, 12)
+        ([C,Cs,D,Ds,E,F,Fs,G,Gs,A,As,B][n + 1], oct - 1)
+    end
+
+"""
+    trans(i, p)::Pitch
+
+Transposes a `Pitch` by an integer value.
+"""
+trans(i, p) = abspitch(p) + i |> pitch
+
+export abspitch, pitch, trans
 
 end # module
