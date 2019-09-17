@@ -18,7 +18,6 @@ const
 
 abstract type Music end
 abstract type Primitive <: Music end
-abstract type Control end
 
 struct Note <: Primitive
     dur::Dur
@@ -42,6 +41,8 @@ struct Parallel <: Music
     a::Vector{Music}
 end
 
+abstract type Control end
+
 struct Modify <: Music
     c::Control
     a::Music
@@ -49,8 +50,6 @@ end
 
 →(a...) = Sequence([a...])
 ⇉(a...) = Parallel([a...])
-
-seq(a...) = →(a...)
 
 export Sequence, Parallel, Modify
 export →, ⇉
