@@ -1,18 +1,20 @@
 module Tarana
 
-struct PitchClass
+abstract type AbstractPitchClass end
+
+struct PitchClass <: AbstractPitchClass
     s::Symbol
 end
 
-const Pitch = Tuple{PitchClass, Integer}
+const Pitch = Tuple{AbstractPitchClass, Integer}
 
 struct Note{T <: Number} 
-    dur::T
+    t::T
     p::Pitch
 end
 
 struct Rest{T <: Number}
-    dur::T
+    t::T
 end
 
 pc = PitchClass
@@ -135,6 +137,7 @@ include("./unicode.jl")
 const eqtemp = [C, C♯, D, D♯, E, F, F♯, G, G♯, A, A♯, B]
 
 ord(p) = ord(p...)
+ord(n::Note) = ord(n.p)
 ord(pc, oct) = 12 * (oct + 1) + pc_to_i[pc]
 
 pitch(ap::Integer) =
@@ -142,17 +145,21 @@ pitch(ap::Integer) =
         (eqtemp[n + 1], oct - 1)
     end
 
-trans(i, p) = ord(p) + i |> pitch
+trans(i, p::Pitch) = ord(p) + i |> pitch
+trans(i, n::Note) = Note(n.t, trans(i, n.p))
 
 export
     ord,
     pitch,
     trans
 
-Base.show(io::IO, x::PitchClass) = print(io, pc_to_str[x])
+# Base.show(io::IO, x::PitchClass) = print(io, pc_to_str[x])
 
 Base.:+(a::Pitch, b) = trans(b, a)
 Base.:-(a::Pitch, b) = trans(-b, a)
+
+Base.:+(a::Note, b) = Note(a.t, a.p + b)
+Base.:-(a::Note, b) = Note(a.t, a.p - b)
 
 Base.isless(a::Pitch, b::Pitch) = ord(a) < ord(b)
 Base.isless(a::PitchClass, b::PitchClass) = pc_to_i[a] < pc_to_i[b]
