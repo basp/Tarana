@@ -8,9 +8,9 @@ and performant for Julia.
 julia> note = c♯(4, 1//2)
 Note{Rational{Int64}}(1//2, (Tarana.PitchClass(:Cs), 4))
 
-julia> ord(note.p)
+julia> ord(note)
 61
 
-julia> trans(1, note)
-Note{Rational{Int64}}(1//2, (Tarana.PitchClass(:D), 4))
+julia> trans(2, note)
+Note{Rational{Int64}}(1//2, (Tarana.PitchClass(:Ds), 4))
 ```

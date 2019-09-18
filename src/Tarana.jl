@@ -6,7 +6,7 @@ struct PitchClass <: AbstractPitchClass
     s::Symbol
 end
 
-const Pitch = Tuple{AbstractPitchClass, Integer}
+const Pitch{T <: AbstractPitchClass} = Tuple{T, Integer}
 
 struct Note{T <: Number} 
     t::T
