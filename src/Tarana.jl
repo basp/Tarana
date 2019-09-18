@@ -134,8 +134,6 @@ include("./unicode.jl")
 
 const eqtemp = [C, C♯, D, D♯, E, F, F♯, G, G♯, A, A♯, B]
 
-Base.show(io::IO, x::PitchClass) = print(io, pctostr[x])
-
 abspitch(p) = abspitch(p...)
 abspitch(pc, oct) = 12 * (oct + 1) + pctoint[pc]
 
@@ -150,5 +148,10 @@ export
     abspitch,
     pitch,
     trans
+
+Base.show(io::IO, x::PitchClass) = print(io, pctostr[x])
+
+Base.:+(a::Pitch, b) = abspitch(a) + b |> pitch  
+Base.:-(a::Pitch, b) = abspitch(a) - b |> pitch
 
 end # module

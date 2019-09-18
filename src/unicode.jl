@@ -28,6 +28,15 @@ const
     B♯ = Bs
     B♯♯ = Bss
 
+export
+    C♭♭, C♭, C♯, C♯♯,
+    D♭♭, D♭, D♯, D♯♯,
+    E♭♭, E♭, E♯, E♯♯,
+    F♭♭, F♭, F♯, F♯♯,
+    G♭♭, G♭, G♯, G♯♯,
+    A♭♭, A♭, A♯, A♯♯,
+    B♭♭, B♭, B♯, B♯♯
+
 c♭♭ = cff
 c♭ = cf
 c♯ = cs
@@ -56,15 +65,6 @@ b♭♭ = bff
 b♭ = bf
 b♯ = bs
 b♯♯ = bss
-
-export
-    C♭♭, C♭, C♯, C♯♯,
-    D♭♭, D♭, D♯, D♯♯,
-    E♭♭, E♭, E♯, E♯♯,
-    F♭♭, F♭, F♯, F♯♯,
-    G♭♭, G♭, G♯, G♯♯,
-    A♭♭, A♭, A♯, A♯♯,
-    B♭♭, B♭, B♯, B♯♯
 
 export
     c♭♭, c♭, c♯♯, c♯,
