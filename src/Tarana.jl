@@ -112,7 +112,7 @@ export
     aff, af, a, as, ass,
     bff, bf, b, bs, bss
 
-const pc_to_ord = Dict(
+const pc_to_i = Dict(
     Cff => -2, Cf => -1, C =>  0, Cs =>  1, Css =>  2,
     Dff =>  0, Df =>  1, D =>  2, Ds =>  3, Dss =>  4,
     Eff =>  2, Ef =>  3, E =>  4, Es =>  5, Ess =>  6,
@@ -135,7 +135,7 @@ include("./unicode.jl")
 const eqtemp = [C, C♯, D, D♯, E, F, F♯, G, G♯, A, A♯, B]
 
 ord(p) = ord(p...)
-ord(pc, oct) = 12 * (oct + 1) + pc_to_ord[pc]
+ord(pc, oct) = 12 * (oct + 1) + pc_to_i[pc]
 
 pitch(ap::Integer) =
     let (oct, n) = divrem(ap, 12)
@@ -154,4 +154,7 @@ Base.show(io::IO, x::PitchClass) = print(io, pc_to_str[x])
 Base.:+(a::Pitch, b) = abspitch(a) + b |> pitch  
 Base.:-(a::Pitch, b) = abspitch(a) - b |> pitch
 
+Base.isless(a::Pitch, b::Pitch) = ord(a) < ord(b)
+Base.isless(a::PitchClass, b::PitchClass) = pc_to_i[a] < pc_to_i[b]
+    
 end # module
