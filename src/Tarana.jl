@@ -151,8 +151,8 @@ export
 
 Base.show(io::IO, x::PitchClass) = print(io, pc_to_str[x])
 
-Base.:+(a::Pitch, b) = abspitch(a) + b |> pitch  
-Base.:-(a::Pitch, b) = abspitch(a) - b |> pitch
+Base.:+(a::Pitch, b) = trans(b, a)
+Base.:-(a::Pitch, b) = trans(-b, a)
 
 Base.isless(a::Pitch, b::Pitch) = ord(a) < ord(b)
 Base.isless(a::PitchClass, b::PitchClass) = pc_to_i[a] < pc_to_i[b]
