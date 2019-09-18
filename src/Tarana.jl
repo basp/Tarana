@@ -112,7 +112,7 @@ export
     aff, af, a, as, ass,
     bff, bf, b, bs, bss
 
-const pctoint = Dict(
+const pc_to_ord = Dict(
     Cff => -2, Cf => -1, C =>  0, Cs =>  1, Css =>  2,
     Dff =>  0, Df =>  1, D =>  2, Ds =>  3, Dss =>  4,
     Eff =>  2, Ef =>  3, E =>  4, Es =>  5, Ess =>  6,
@@ -121,7 +121,7 @@ const pctoint = Dict(
     Aff =>  7, Af =>  8, A =>  9, As => 10, Ass => 11,
     Bff =>  9, Bf => 10, B => 11, Bs => 12, Bss => 13)
 
-const pctostr = Dict(
+const pc_to_str = Dict(
     Cff => "C♭♭", Cf => "C♭", C => "C", Cs => "C♯", Css => "C♯♯",
     Dff => "D♭♭", Df => "D♭", D => "D", Ds => "D♯", Dss => "D♯♯",
     Eff => "E♭♭", Ef => "E♭", E => "E", Es => "E♯", Ess => "E♯♯",
@@ -134,22 +134,22 @@ include("./unicode.jl")
 
 const eqtemp = [C, C♯, D, D♯, E, F, F♯, G, G♯, A, A♯, B]
 
-abspitch(p) = abspitch(p...)
-abspitch(pc, oct) = 12 * (oct + 1) + pctoint[pc]
+ord(p) = ord(p...)
+ord(pc, oct) = 12 * (oct + 1) + pc_to_ord[pc]
 
-pitch(ap) =
+pitch(ap::Integer) =
     let (oct, n) = divrem(ap, 12)
         (eqtemp[n + 1], oct - 1)
     end
 
-trans(i, p) = abspitch(p) + i |> pitch
+trans(i, p) = ord(p) + i |> pitch
 
 export
-    abspitch,
+    ord,
     pitch,
     trans
 
-Base.show(io::IO, x::PitchClass) = print(io, pctostr[x])
+Base.show(io::IO, x::PitchClass) = print(io, pc_to_str[x])
 
 Base.:+(a::Pitch, b) = abspitch(a) + b |> pitch  
 Base.:-(a::Pitch, b) = abspitch(a) - b |> pitch
